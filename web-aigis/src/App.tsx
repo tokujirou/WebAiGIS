@@ -9,16 +9,10 @@ export function App() {
   const [material, setMaterial] = useState<Material | null>(null);
   const loader = new BufferGeometryLoader();
   useEffect(() => {
-    if (import.meta.env.PROD) {
-      loader.load("../test.json", (geometry) =>
-        loadJson(geometry, setGeometry, setMaterial)
-      );
-    }
-    if (import.meta.env.DEV) {
-      loader.load("../public/test.json", (geometry) =>
-        loadJson(geometry, setGeometry, setMaterial)
-      );
-    }
+    loader.load(
+      import.meta.env.PROD ? "../test.json" : "../public/test.json",
+      (geometry) => loadJson(geometry, setGeometry, setMaterial)
+    );
   }, []);
 
   return (

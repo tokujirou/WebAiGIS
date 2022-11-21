@@ -25,8 +25,8 @@ export function App() {
         onPointerUp={() => setIsPointerDown(false)}
         onPointerMove={(e) => {
           if (isPointerDown) {
-            ref.current?.rotateY(e.movementY * 0.01);
-            ref.current?.rotateZ(e.movementX * -0.01);
+            ref.current?.rotateZ(e.movementY * 0.01);
+            ref.current?.rotateY(e.movementX * 0.01);
           }
         }}
       >

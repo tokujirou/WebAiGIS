@@ -2,3 +2,37 @@
   width: 100vw;
   height: 100vh;
 }
+
+.color-map-button {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  box-sizing: border-box;
+  box-shadow: none;
+  border: none;
+  font: 12px sans-serif;
+  letter-spacing: 2px;
+  color: white;
+  border: solid 1px transparent;
+  border-image: linear-gradient(45deg, pink, skyblue);
+  border-image-slice: 1;
+  background: linear-gradient(45deg, pink, skyblue);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transition: .4s;
+
+}
+
+.color-map-button:hover {
+  letter-spacing: 4px;
+  border: solid 1px transparent;
+  border-image: linear-gradient(45deg, red, blue);
+  border-image-slice: 1;
+  background: linear-gradient(45deg, red, blue);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transition: .4s;
+  transition: .4s;
+}

@@ -47,8 +47,11 @@ export function App() {
         <ambientLight intensity={0.1} />
         <directionalLight color="white" position={[0, 0, 5]} />
       </Canvas>
-      <button onClick={() => setColorMap(reverseColorMap)}>
-        {reverseColorMap}
+      <button
+        onClick={() => setColorMap(reverseColorMap)}
+        className="color-map-button"
+      >
+        change color
       </button>
     </div>
   );

@@ -1,0 +1,13 @@
+{
+  "name": "mapdata2json",
+  "version": "1.0.0",
+  "description": "",
+  "type": "commonjs",
+  "main": "mapdata2json.js",
+  "scripts": {
+    "start": "node mapdata2json.js",
+    "reset": "rm test.json"
+  },
+  "author": "",
+  "license": "ISC"
+}

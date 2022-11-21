@@ -3,19 +3,24 @@ import { Canvas } from "@react-three/fiber";
 import { BufferGeometry, BufferGeometryLoader, Material, Mesh } from "three";
 import loadJson from "./loadJson";
 import { useEffect, useRef, useState } from "react";
+import { ColorMap } from "./types/loader";
 
 export function App() {
   const [geometry, setGeometry] = useState<BufferGeometry | null>(null);
   const [material, setMaterial] = useState<Material | null>(null);
   const [isPointerDown, setIsPointerDown] = useState(false);
+  const [colorMap, setColorMap] = useState<ColorMap>(ColorMap.Rainbow);
   const ref = useRef<Mesh>(null);
   const loader = new BufferGeometryLoader();
   useEffect(() => {
     loader.load(
       import.meta.env.PROD ? "../test.json" : "../public/test.json",
-      (geometry) => loadJson(geometry, setGeometry, setMaterial)
+      (geometry) => loadJson(geometry, setGeometry, setMaterial, colorMap)
     );
-  }, []);
+  }, [colorMap]);
+
+  const reverseColorMap =
+    colorMap === ColorMap.Rainbow ? ColorMap.Grayscale : ColorMap.Rainbow;
 
   return (
     <div id="canvas-container">
@@ -42,6 +47,9 @@ export function App() {
         <ambientLight intensity={0.1} />
         <directionalLight color="white" position={[0, 0, 5]} />
       </Canvas>
+      <button onClick={() => setColorMap(reverseColorMap)}>
+        {reverseColorMap}
+      </button>
     </div>
   );
 }

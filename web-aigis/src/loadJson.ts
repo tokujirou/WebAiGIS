@@ -7,11 +7,13 @@ import {
   MeshLambertMaterial,
 } from "three";
 import { Lut } from "three/examples/jsm/math/Lut";
+import { ColorMap } from "./types/loader";
 
 function loadJson(
   geometry: BufferGeometry,
   setGeometry: (geometry: BufferGeometry) => void,
-  setMaterial: (material: Material) => void
+  setMaterial: (material: Material) => void,
+  colorMap: ColorMap = ColorMap.Rainbow
 ) {
   geometry.computeVertexNormals();
   geometry.normalizeNormals();
@@ -29,11 +31,10 @@ function loadJson(
 
   let lutColors = [];
   const COLOR_KIND = 512;
-  var COLOR_MAP = "rainbow";
   let color;
 
   //カラースケールの宣言
-  let lut = new Lut(COLOR_MAP, COLOR_KIND);
+  let lut = new Lut(colorMap, COLOR_KIND);
   lut.setMax(max);
   lut.setMin(min);
 

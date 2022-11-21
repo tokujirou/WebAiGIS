@@ -9,7 +9,7 @@ export function App() {
   const [material, setMaterial] = useState<Material | null>(null);
   const loader = new BufferGeometryLoader();
   useEffect(() => {
-    loader.load("../test.json", (geometry) =>
+    loader.load("../public/test.json", (geometry) =>
       loadJson(geometry, setGeometry, setMaterial)
     );
   }, []);

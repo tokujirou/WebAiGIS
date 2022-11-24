@@ -44,3 +44,16 @@
   font-size: 4px;
   color: black;
 }
+
+.selected-map-data {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  font-size: 4px;
+  font-weight: 300;
+  background-color: aliceblue;
+  color: black;
+  vertical-align: center;
+  border-radius: 8px;
+  padding: 8px 12px;
+}

@@ -5,19 +5,20 @@ import loadJson from "./loadJson";
 import { useEffect, useRef, useState } from "react";
 import { ColorMap } from "./types/loader";
 import Select from "react-select";
+import ryuguAcceleration from "../public/ryuguAcceleration.json";
 
-const itokawaDataOptions = [
+const ryuguDataOptions = [
   {
-    value: "itokawaAcceleration",
-    label: "Itokawa Acceleration",
+    value: "ryuguAcceleration",
+    label: "Ryugu Acceleration",
   },
   {
-    value: "itokawaGeopotentialHeight",
-    label: "Itokawa Geopotential Height",
+    value: "ryuguGeopotentialHeight",
+    label: "Ryugu Geopotential Height",
   },
   {
-    value: "itokawaGravitationalSlope",
-    label: "Itokawa Gravitational Slope",
+    value: "ryuguGravitationalSlope",
+    label: "Ryugu Gravitational Slope",
   },
 ];
 
@@ -26,7 +27,8 @@ export function App() {
   const [material, setMaterial] = useState<Material | null>(null);
   const [isPointerDown, setIsPointerDown] = useState(false);
   const [colorMap, setColorMap] = useState<ColorMap>(ColorMap.Rainbow);
-  const [dataOption, setDataOption] = useState(itokawaDataOptions[0]);
+  const [dataOption, setDataOption] = useState(ryuguDataOptions[0]);
+  const [selectedMapData, setSelectedMapData] = useState<number | null>(null);
   const ref = useRef<Mesh>(null);
   const loader = new BufferGeometryLoader();
   useEffect(() => {
@@ -61,6 +63,14 @@ export function App() {
             receiveShadow
             geometry={geometry}
             material={material}
+            onClick={(e) => {
+              e.faceIndex &&
+                setSelectedMapData(
+                  (ryuguAcceleration as any).data.attributes.pressure.array[
+                    e.faceIndex
+                  ]
+                );
+            }}
           />
         )}
         <ambientLight intensity={0.1} />
@@ -75,10 +85,17 @@ export function App() {
       </button>
       <Select
         className="data-selector"
-        options={itokawaDataOptions}
+        options={ryuguDataOptions}
         value={dataOption}
         onChange={(option) => option && setDataOption(option)}
       />
+      {selectedMapData && (
+        <div className="selected-map-data">
+          Ryugu Acceleration
+          <br />
+          selected point: {selectedMapData} m/sec^2
+        </div>
+      )}
     </div>
   );
 }

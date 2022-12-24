@@ -59,7 +59,7 @@ function loadJson(
       lutColors.length - geometry.attributes.position.array.length
     );
     for (let i = 0; i < gap * 3; i++) {
-      lutColors.push(0);
+      lutColors.push(1);
     }
   }
   geometry.setAttribute(

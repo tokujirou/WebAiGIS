@@ -1,6 +1,6 @@
 import { OrbitControls } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef } from "react";
 import { BufferGeometry, Material, Mesh } from "three";
 import ryuguAcceleration from "../../public/ryuguAcceleration.json";
 
@@ -17,8 +17,6 @@ export const AsteroidCanvas: FC<{
       {geometry && material && (
         <mesh
           ref={ref}
-          castShadow
-          receiveShadow
           geometry={geometry}
           material={material}
           onClick={(e) => {

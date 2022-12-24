@@ -31,9 +31,7 @@ export const AsteroidCanvas: FC<{
           }}
         />
       )}
-      <ambientLight intensity={0.1} />
-      <directionalLight color="white" position={[0, 0, 10]} />
-      <directionalLight color="white" position={[0, 0, -10]} />
+      <ambientLight intensity={0.5} />
     </Canvas>
   );
 };

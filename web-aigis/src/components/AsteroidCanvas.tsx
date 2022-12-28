@@ -1,19 +1,21 @@
 import { OrbitControls } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
 import { FC, useEffect, useRef } from "react";
-import { BufferGeometry, Material, Mesh } from "three";
+import { BufferGeometry, Camera, Material, Mesh } from "three";
 import ryuguAcceleration from "../../public/ryuguAcceleration.json";
+import { useLocation } from "react-router-dom";
 
 export const AsteroidCanvas: FC<{
   geometry: BufferGeometry | null;
   material: Material | null;
   setSelectedMapData: (selectedMapData: number) => void;
-}> = ({ geometry, material, setSelectedMapData }) => {
+  setCamera: (camera: Camera) => void;
+}> = ({ geometry, material, setSelectedMapData, setCamera }) => {
   const ref = useRef<Mesh>(null);
 
   return (
     <Canvas camera={{ fov: 0.13, near: 0.1, far: 1000 }}>
-      <CameraController />
+      <CameraController setCamera={setCamera} />
       {geometry && material && (
         <mesh
           ref={ref}
@@ -34,15 +36,26 @@ export const AsteroidCanvas: FC<{
   );
 };
 
-const CameraController: FC = () => {
+const CameraController: FC<{ setCamera: (camera: Camera) => void }> = ({
+  setCamera,
+}) => {
   const {
     camera,
     gl: { domElement },
   } = useThree();
 
+  setCamera(camera);
+
   useEffect(() => {
     camera.position.set(0, 0, 1000);
   }, []);
+
+  const search = useLocation().search;
+  const params = new URLSearchParams(search);
+  const x = params.get("x");
+  const y = params.get("y");
+  const z = params.get("z");
+  console.log(x, y, z);
 
   return <OrbitControls camera={camera} domElement={domElement} />;
 };

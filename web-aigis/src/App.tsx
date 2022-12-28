@@ -1,10 +1,11 @@
 import "./App.css";
-import { BufferGeometry, BufferGeometryLoader, Material, Mesh } from "three";
+import { BufferGeometry, BufferGeometryLoader, Camera, Material } from "three";
 import loadJson from "./loadJson";
 import { useEffect, useState } from "react";
 import { ColorMap } from "./types/loader";
 import Select from "react-select";
 import { AsteroidCanvas } from "./components/AsteroidCanvas";
+import { UrlGenerateButton } from "./components/UrlGenerateButton";
 
 const ryuguDataOptions = [
   {
@@ -28,6 +29,7 @@ export function App() {
 
   const [colorMap, setColorMap] = useState<ColorMap>(ColorMap.Rainbow);
   const [dataOption, setDataOption] = useState(ryuguDataOptions[0]);
+  const [camera, setCamera] = useState<Camera | null>(null);
 
   const loader = new BufferGeometryLoader();
   useEffect(() => {
@@ -46,6 +48,7 @@ export function App() {
         geometry={geometry}
         material={material}
         setSelectedMapData={setSelectedMapData}
+        setCamera={setCamera}
       />
       <button
         onClick={() =>
@@ -63,9 +66,10 @@ export function App() {
         value={dataOption}
         onChange={(option) => option && setDataOption(option)}
       />
+      <UrlGenerateButton camera={camera} />
       {selectedMapData && (
         <div className="selected-map-data">
-          Ryugu Acceleration
+          {dataOption?.label}
           <br />
           selected point: {selectedMapData} m/sec^2
         </div>

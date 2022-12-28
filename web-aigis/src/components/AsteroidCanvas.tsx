@@ -45,17 +45,18 @@ const CameraController: FC<{ setCamera: (camera: Camera) => void }> = ({
   } = useThree();
 
   setCamera(camera);
-
-  useEffect(() => {
-    camera.position.set(0, 0, 1000);
-  }, []);
-
   const search = useLocation().search;
   const params = new URLSearchParams(search);
   const x = params.get("x");
   const y = params.get("y");
   const z = params.get("z");
-  console.log(x, y, z);
+
+  useEffect(() => {
+    camera.position.set(0, 0, 1000);
+    if (x || y || z) {
+      camera.position.set(Number(x), Number(y), Number(z));
+    }
+  }, [x, y, z]);
 
   return <OrbitControls camera={camera} domElement={domElement} />;
 };

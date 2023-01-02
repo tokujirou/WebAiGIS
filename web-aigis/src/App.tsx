@@ -32,6 +32,7 @@ export function App() {
   const [camera, setCamera] = useState<Camera | null>(null);
 
   const loader = new BufferGeometryLoader();
+
   useEffect(() => {
     // カラーマップまたは選択されているデータが変更されたら、ロードをし直す。
     loader.load(

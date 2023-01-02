@@ -11,14 +11,10 @@ export const AsteroidCanvas: FC<{
   setSelectedMapData: (selectedMapData: number) => void;
   setCamera: (camera: Camera) => void;
 }> = ({ geometry, material, setSelectedMapData, setCamera }) => {
-  const ref = useRef<Mesh>(null);
-
   return (
-    <Canvas camera={{ fov: 0.13, near: 0.1, far: 1000 }}>
-      <CameraController setCamera={setCamera} />
+    <Canvas camera={{ fov: 0.13 }}>
       {geometry && material && (
         <mesh
-          ref={ref}
           geometry={geometry}
           material={material}
           onClick={(e) => {
@@ -31,6 +27,7 @@ export const AsteroidCanvas: FC<{
           }}
         />
       )}
+      <CameraController setCamera={setCamera} />
       <ambientLight intensity={0.5} />
     </Canvas>
   );

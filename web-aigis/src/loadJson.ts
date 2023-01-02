@@ -2,9 +2,9 @@ import {
   BufferAttribute,
   BufferGeometry,
   Color,
-  DoubleSide,
+  FrontSide,
   Material,
-  MeshLambertMaterial,
+  MeshPhongMaterial,
 } from "three";
 import { Lut } from "three/examples/jsm/math/Lut";
 import { ColorMap } from "./types/loader";
@@ -68,8 +68,8 @@ function loadJson(
   );
   geometry.computeBoundingBox();
 
-  let material = new MeshLambertMaterial({
-    side: DoubleSide,
+  let material = new MeshPhongMaterial({
+    side: FrontSide,
     color: 0xf5f5f5,
     vertexColors: true,
   });

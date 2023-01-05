@@ -12,17 +12,19 @@ async function main() {
   // const [inFileOBJ] = await input();
   const inFileOBJ = "test.obj";
 
-  console.log("Please input '.json filename' \n(ex)xxx.json　=> \n");
-  // const [outFile] = await input();
-  const outFile = "ryuguAcceleration.json";
-
   console.log("Please Input asterod name. \n(ex)asteroid => \n");
   // const [asteroidName] = await input();
-  const asteroidName = "Ryugu";
+  const asteroidName = "ryugu";
 
-  console.log("Please Input mapdata kind. \n(ex)Geopotential_Height => \n");
-  // const [kind] = await input();
-  const kind = "Acceleration";
+  console.log(`And, input mapData '.txt filename' \n(ex)xxx.txt => `);
+  //const [mapDataFileName] = await input();
+  const mapDataFileName = "Acceleration.txt";
+
+  const mapData = await fsPromises.readFile(mapDataFileName, {
+    encoding: "utf-8",
+  });
+  const mapDataLines = mapData.split("\n");
+  const outFile = `${asteroidName}${mapDataLines[1]}.json`;
 
   console.log("Please wait a moment...");
 
@@ -45,7 +47,7 @@ async function main() {
 
   fs.writeFile(
     outFile,
-    `{\n\t"metadata": {\n\t\t"version": 4,\n\t\t"type": "BufferGeometry"\n\t},\n\t"userData": {\n\t\t"name": "${asteroidName}",\n\t\t"kind": "${kind}"\n\t},\n\t"data":{\n\t\t"attributes": {\n\t\t\t"position": {\n\t\t\t\t"itemSize": 3,\n\t\t\t\t"type": "Float32Array",\n\t\t\t\t"array": [`,
+    `{\n\t"metadata": {\n\t\t"version": 4,\n\t\t"type": "BufferGeometry"\n\t},\n\t"userData": {\n\t\t"name": "${asteroidName}",\n\t\t"kind": "${mapDataLines[1]}",\n\t\t"unit": "${mapDataLines[2]}"\n\t\t},\n\t"data":{\n\t\t"attributes": {\n\t\t\t"position": {\n\t\t\t\t"itemSize": 3,\n\t\t\t\t"type": "Float32Array",\n\t\t\t\t"array": [`,
     (err) => {
       if (err) throw err;
     }
@@ -76,15 +78,6 @@ async function main() {
     }
   );
 
-  console.log(`And, input mapData '.txt filename' \n(ex)xxx.txt => `);
-  //const [mapDataFileName] = await input();
-  const mapDataFileName = "Acceleration.txt";
-
-  const mapData = await fsPromises.readFile(mapDataFileName, {
-    encoding: "utf-8",
-  });
-
-  const mapDataLines = mapData.split("\n");
   const mapdataCount = mapDataLines[3];
 
   for (let i = 4; i < mapdataCount; i++) {

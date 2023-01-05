@@ -2,6 +2,8 @@ import {
   BufferAttribute,
   BufferGeometry,
   Color,
+  DoubleSide,
+  FrontSide,
   Material,
   MeshStandardMaterial,
 } from "three";
@@ -12,8 +14,15 @@ function loadJson(
   geometry: BufferGeometry,
   setGeometry: (geometry: BufferGeometry) => void,
   setMaterial: (material: Material) => void,
+  setAsteroidName: (asteroidName: string) => void,
+  setMapDataKind: (mapDataKind: string) => void,
+  setUnit: (unit: string) => void,
   colorMap: ColorMap = ColorMap.Rainbow
 ) {
+  setAsteroidName(geometry.userData.name ?? "");
+  setMapDataKind(geometry.userData.kind ?? "");
+  setUnit(geometry.userData.unit ?? "");
+
   geometry.computeVertexNormals();
   geometry.normalizeNormals();
 
@@ -68,6 +77,8 @@ function loadJson(
   geometry.computeBoundingBox();
 
   let material = new MeshStandardMaterial({
+    side: FrontSide,
+    color: 0xf5f5f5,
     vertexColors: true,
   });
 

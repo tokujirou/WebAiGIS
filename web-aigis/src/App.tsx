@@ -6,6 +6,7 @@ import { ColorMap } from "./types/loader";
 import Select from "react-select";
 import { AsteroidCanvas } from "./components/AsteroidCanvas";
 import { UrlGenerateButton } from "./components/UrlGenerateButton";
+import { useLocation } from "react-router-dom";
 
 const ryuguDataOptions = [
   {
@@ -25,7 +26,16 @@ const ryuguDataOptions = [
 export function App() {
   const [geometry, setGeometry] = useState<BufferGeometry | null>(null);
   const [material, setMaterial] = useState<Material | null>(null);
-  const [selectedMapData, setSelectedMapData] = useState<number | null>(null);
+  const [asteroidName, setAsteroidName] = useState<string | null>(null);
+  const [mapdataKind, setMapdataKind] = useState<string | null>(null);
+  const [unit, setUnit] = useState<string | null>(null);
+
+  const search = useLocation().search;
+  const params = new URLSearchParams(search);
+  const selectedMapDataPoint = params.get("selectedMapData");
+  const [selectedMapData, setSelectedMapData] = useState<number | null>(
+    selectedMapDataPoint ? Number(selectedMapDataPoint) : null
+  );
 
   const [colorMap, setColorMap] = useState<ColorMap>(ColorMap.Rainbow);
   const [dataOption, setDataOption] = useState(ryuguDataOptions[0]);
@@ -39,7 +49,16 @@ export function App() {
       import.meta.env.PROD
         ? `../${dataOption.value}.json`
         : `../public/${dataOption.value}.json`,
-      (geometry) => loadJson(geometry, setGeometry, setMaterial, colorMap)
+      (geometry) =>
+        loadJson(
+          geometry,
+          setGeometry,
+          setMaterial,
+          setAsteroidName,
+          setMapdataKind,
+          setUnit,
+          colorMap
+        )
     );
   }, [colorMap, dataOption]);
 
@@ -67,12 +86,12 @@ export function App() {
         value={dataOption}
         onChange={(option) => option && setDataOption(option)}
       />
-      <UrlGenerateButton camera={camera} />
+      <UrlGenerateButton camera={camera} selectedMapData={selectedMapData} />
       {selectedMapData && (
         <div className="selected-map-data">
-          {dataOption?.label}
+          {asteroidName} {mapdataKind}
           <br />
-          selected point: {selectedMapData} m/sec^2
+          selected point: {selectedMapData} {unit}
         </div>
       )}
     </div>

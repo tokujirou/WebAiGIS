@@ -2,9 +2,10 @@ import { Button, Dialog } from "@mui/material";
 import { FC, useCallback, useState } from "react";
 import { Camera } from "three";
 
-export const UrlGenerateButton: FC<{ camera: Camera | null }> = ({
-  camera,
-}) => {
+export const UrlGenerateButton: FC<{
+  camera: Camera | null;
+  selectedMapData: number | null;
+}> = ({ camera, selectedMapData }) => {
   const [isOpen, setIsOpen] = useState(false);
   const showModal = useCallback(() => {
     setIsOpen(true);
@@ -27,7 +28,7 @@ export const UrlGenerateButton: FC<{ camera: Camera | null }> = ({
       {isOpen && (
         <Dialog open onClose={closeModal}>
           <div style={{ padding: "3rem" }}>
-            {`https://web-ai-gis.vercel.app/?x=${camera?.position.x}&y=${camera?.position.y}&z=${camera?.position.z}`}
+            {`https://web-ai-gis.vercel.app/?x=${camera?.position.x}&y=${camera?.position.y}&z=${camera?.position.z}&selectedMapData=${selectedMapData}`}
           </div>
         </Dialog>
       )}

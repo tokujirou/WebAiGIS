@@ -28,7 +28,7 @@ export const AsteroidCanvas: FC<{
         />
       )}
       <CameraController setCamera={setCamera} />
-      <ambientLight intensity={0.5} />
+      <ambientLight intensity={0.5} color={0xffffff} />
     </Canvas>
   );
 };

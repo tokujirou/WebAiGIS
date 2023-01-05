@@ -125,7 +125,7 @@ export function App() {
         >
           Asteroid: {asteroidName}
           <br />
-          {mapdataKind}
+          Mapdata Type: {mapdataKind}
           <br />
           selected point: {selectedMapData} {unit}
         </div>

@@ -31,7 +31,7 @@ export const UrlGenerateButton: FC<{
           borderColor: "white",
         }}
       >
-        Generate URL
+        SHARE
       </Button>
 
       {isOpen && (
@@ -39,6 +39,20 @@ export const UrlGenerateButton: FC<{
           <div style={{ padding: "3rem", wordWrap: "break-word" }}>
             {`https://web-ai-gis.vercel.app/?selectedDataOption=${selectedDataOption.value}&x=${camera?.position.x}&y=${camera?.position.y}&z=${camera?.position.z}&selectedMapData=${selectedMapData}&colorMap=${colorMap}`}
           </div>
+          <Button
+            onClick={() => {
+              const text = `https://web-ai-gis.vercel.app/?selectedDataOption=${selectedDataOption.value}&x=${camera?.position.x}&y=${camera?.position.y}&z=${camera?.position.z}&selectedMapData=${selectedMapData}&colorMap=${colorMap}`;
+              navigator.clipboard
+                .writeText(text)
+                .then(() => {
+                  window.alert("Copied to clipboard!");
+                  closeModal();
+                })
+                .catch(() => console.error("Failed to copy to clipboard"));
+            }}
+          >
+            Copy
+          </Button>
         </Dialog>
       )}
     </>

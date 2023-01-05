@@ -32,13 +32,21 @@ export function App() {
 
   const search = useLocation().search;
   const params = new URLSearchParams(search);
+  const selectedDataOptionValue = params.get("selectedDataOption");
   const selectedMapDataPoint = params.get("selectedMapData");
+  const paramsColorMap = params.get("colorMap");
   const [selectedMapData, setSelectedMapData] = useState<number | null>(
     selectedMapDataPoint ? Number(selectedMapDataPoint) : null
   );
 
-  const [colorMap, setColorMap] = useState<ColorMap>(ColorMap.Rainbow);
-  const [dataOption, setDataOption] = useState(ryuguDataOptions[0]);
+  const [colorMap, setColorMap] = useState<ColorMap>(
+    (paramsColorMap as ColorMap) ?? ColorMap.Rainbow
+  );
+  const [selectedDataOption, setSelectedDataOption] = useState(
+    ryuguDataOptions.find(
+      (option) => option.value === selectedDataOptionValue
+    ) ?? ryuguDataOptions[0]
+  );
   const [camera, setCamera] = useState<Camera | null>(null);
 
   const loader = new BufferGeometryLoader();
@@ -47,8 +55,8 @@ export function App() {
     // カラーマップまたは選択されているデータが変更されたら、ロードをし直す。
     loader.load(
       import.meta.env.PROD
-        ? `../${dataOption.value}.json`
-        : `../public/${dataOption.value}.json`,
+        ? `../${selectedDataOption.value}.json`
+        : `../public/${selectedDataOption.value}.json`,
       (geometry) =>
         loadJson(
           geometry,
@@ -60,7 +68,7 @@ export function App() {
           colorMap
         )
     );
-  }, [colorMap, dataOption]);
+  }, [colorMap, selectedDataOption]);
 
   return (
     <div id="canvas-container">
@@ -83,10 +91,15 @@ export function App() {
       <Select
         className="data-selector"
         options={ryuguDataOptions}
-        value={dataOption}
-        onChange={(option) => option && setDataOption(option)}
+        value={selectedDataOption}
+        onChange={(option) => option && setSelectedDataOption(option)}
       />
-      <UrlGenerateButton camera={camera} selectedMapData={selectedMapData} />
+      <UrlGenerateButton
+        camera={camera}
+        colorMap={colorMap}
+        selectedMapData={selectedMapData}
+        selectedDataOption={selectedDataOption}
+      />
       {selectedMapData && (
         <div className="selected-map-data">
           {asteroidName} {mapdataKind}

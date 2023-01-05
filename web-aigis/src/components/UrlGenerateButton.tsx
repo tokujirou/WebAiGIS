@@ -23,14 +23,20 @@ export const UrlGenerateButton: FC<{
       <Button
         onClick={showModal}
         variant="outlined"
-        style={{ position: "absolute", right: 0, bottom: 0 }}
+        style={{
+          position: "absolute",
+          right: 12,
+          bottom: 12,
+          color: "white",
+          borderColor: "white",
+        }}
       >
         Generate URL
       </Button>
 
       {isOpen && (
         <Dialog open onClose={closeModal}>
-          <div style={{ padding: "3rem" }}>
+          <div style={{ padding: "3rem", wordWrap: "break-word" }}>
             {`https://web-ai-gis.vercel.app/?selectedDataOption=${selectedDataOption.value}&x=${camera?.position.x}&y=${camera?.position.y}&z=${camera?.position.z}&selectedMapData=${selectedMapData}&colorMap=${colorMap}`}
           </div>
         </Dialog>

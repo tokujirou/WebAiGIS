@@ -3,39 +3,6 @@
   height: 100vh;
 }
 
-.color-map-button {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  height: 36px;
-  box-sizing: border-box;
-  box-shadow: none;
-  border: none;
-  font: 12px sans-serif;
-  letter-spacing: 2px;
-  border: solid 1px transparent;
-  border-image: linear-gradient(45deg, pink, skyblue);
-  border-image-slice: 1;
-  background: linear-gradient(45deg, pink, skyblue);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  transition: .4s;
-}
-
-.color-map-button:hover {
-  letter-spacing: 4px;
-  border: solid 1px transparent;
-  border-image: linear-gradient(45deg, red, #00d382);
-  border-image-slice: 1;
-  background: linear-gradient(45deg, red, #00d382);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  transition: .4s;
-  transition: .4s;
-}
-
 .data-selector {
   position: absolute !important;
   top: 12px;
@@ -43,17 +10,4 @@
   width: 200px;
   font-size: 4px;
   color: black;
-}
-
-.selected-map-data {
-  position: absolute;
-  bottom: 12px;
-  left: 12px;
-  font-size: 4px;
-  font-weight: 300;
-  background-color: aliceblue;
-  color: black;
-  vertical-align: center;
-  border-radius: 8px;
-  padding: 8px 12px;
 }

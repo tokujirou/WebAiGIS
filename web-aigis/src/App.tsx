@@ -7,6 +7,7 @@ import Select from "react-select";
 import { AsteroidCanvas } from "./components/AsteroidCanvas";
 import { UrlGenerateButton } from "./components/UrlGenerateButton";
 import { useLocation } from "react-router-dom";
+import { Button } from "@mui/material";
 
 const ryuguDataOptions = [
   {
@@ -78,16 +79,23 @@ export function App() {
         setSelectedMapData={setSelectedMapData}
         setCamera={setCamera}
       />
-      <button
+      <Button
+        variant="outlined"
         onClick={() =>
           setColorMap((prev) =>
             prev === ColorMap.Rainbow ? ColorMap.Grayscale : ColorMap.Rainbow
           )
         }
-        className="color-map-button"
+        style={{
+          position: "absolute",
+          left: 12,
+          top: 12,
+          color: "white",
+          borderColor: "white",
+        }}
       >
         change color
-      </button>
+      </Button>
       <Select
         className="data-selector"
         options={ryuguDataOptions}
@@ -101,8 +109,23 @@ export function App() {
         selectedDataOption={selectedDataOption}
       />
       {selectedMapData && (
-        <div className="selected-map-data">
-          {asteroidName} {mapdataKind}
+        <div
+          style={{
+            position: "absolute",
+            bottom: 12,
+            left: 12,
+            fontSize: 4,
+            fontWeight: "bold",
+            backgroundColor: "aliceblue",
+            color: "black",
+            verticalAlign: "center",
+            borderRadius: 8,
+            padding: "8px 12px",
+          }}
+        >
+          Asteroid: {asteroidName}
+          <br />
+          {mapdataKind}
           <br />
           selected point: {selectedMapData} {unit}
         </div>

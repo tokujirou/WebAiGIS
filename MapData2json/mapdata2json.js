@@ -9,12 +9,22 @@ async function main() {
   let count = 0;
 
   console.log("Please input '.obj filename' \n(ex)xxx.obj =>　\n");
-  //const [inFileOBJ] = await input();
+  // const [inFileOBJ] = await input();
   const inFileOBJ = "test.obj";
 
   console.log("Please input '.json filename' \n(ex)xxx.json　=> \n");
-  //const [outFile] = await input();
-  const outFile = "test.json";
+  // const [outFile] = await input();
+  const outFile = "ryuguAcceleration.json";
+
+  console.log("Please Input asterod name. \n(ex)asteroid => \n");
+  // const [asteroidName] = await input();
+  const asteroidName = "Ryugu";
+
+  console.log("Please Input mapdata kind. \n(ex)Geopotential_Height => \n");
+  // const [kind] = await input();
+  const kind = "Acceleration";
+
+  console.log("Please wait a moment...");
 
   execSync("cat " + inFileOBJ + " | sed -e 's/  */ /g' > Asteroid.txt");
 
@@ -35,7 +45,7 @@ async function main() {
 
   fs.writeFile(
     outFile,
-    '{\n\t"metadata": {\n\t\t"version": 4,\n\t\t"type": "BufferGeometry"\n\t},\n\t"data":{\n\t\t"attributes": {\n\t\t\t"position": {\n\t\t\t\t"itemSize": 3,\n\t\t\t\t"type": "Float32Array",\n\t\t\t\t"array": [',
+    `{\n\t"metadata": {\n\t\t"version": 4,\n\t\t"type": "BufferGeometry"\n\t},\n\t"userData": {\n\t\t"name": "${asteroidName}",\n\t\t"kind": "${kind}"\n\t},\n\t"data":{\n\t\t"attributes": {\n\t\t\t"position": {\n\t\t\t\t"itemSize": 3,\n\t\t\t\t"type": "Float32Array",\n\t\t\t\t"array": [`,
     (err) => {
       if (err) throw err;
     }
@@ -68,7 +78,7 @@ async function main() {
 
   console.log(`And, input mapData '.txt filename' \n(ex)xxx.txt => `);
   //const [mapDataFileName] = await input();
-  const mapDataFileName = "Geopotential_Height.txt";
+  const mapDataFileName = "Acceleration.txt";
 
   const mapData = await fsPromises.readFile(mapDataFileName, {
     encoding: "utf-8",
@@ -78,16 +88,16 @@ async function main() {
   const mapdataCount = mapDataLines[3];
 
   for (let i = 4; i < mapdataCount; i++) {
-    const [a, b] = mapDataLines[i].trim().split(/\s+/);
-    if (b === "-") {
-      b = "0";
+    const [_, val] = mapDataLines[i].trim().split(/\s+/);
+    if (val === "-") {
+      val = "0";
     }
     if (i === Number(mapdataCount) - 1) {
-      await fsPromises.appendFile(outFile, `${b},${b},${b}`, (err) => {
+      await fsPromises.appendFile(outFile, `${val},${val},${val}`, (err) => {
         throw err;
       });
     } else {
-      await fsPromises.appendFile(outFile, `${b},${b},${b},`, (err) => {
+      await fsPromises.appendFile(outFile, `${val},${val},${val},`, (err) => {
         throw err;
       });
     }

@@ -2,7 +2,6 @@ import {
   BufferAttribute,
   BufferGeometry,
   Color,
-  DoubleSide,
   FrontSide,
   Material,
   MeshStandardMaterial,

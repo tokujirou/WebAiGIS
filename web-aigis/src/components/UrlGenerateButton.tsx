@@ -1,5 +1,5 @@
 import { Button, Dialog } from "@mui/material";
-import { FC, useCallback, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { Camera } from "three";
 import { ColorMap } from "../types/loader";
 
@@ -10,9 +10,23 @@ export const UrlGenerateButton: FC<{
   colorMap: ColorMap;
 }> = ({ camera, selectedMapData, selectedDataOption, colorMap }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [url, setUrl] = useState("");
   const showModal = useCallback(() => {
     setIsOpen(true);
   }, []);
+
+  useEffect(() => {
+    setUrl(
+      `https://web-ai-gis.vercel.app/?selectedDataOption=${selectedDataOption.value}&x=${camera?.position.x}&y=${camera?.position.y}&z=${camera?.position.z}&selectedMapData=${selectedMapData}&colorMap=${colorMap}`
+    );
+  }, [
+    selectedDataOption,
+    camera?.position.x,
+    camera?.position.y,
+    camera?.position.z,
+    selectedMapData,
+    colorMap,
+  ]);
 
   const closeModal = useCallback(() => {
     setIsOpen(false);
@@ -36,14 +50,11 @@ export const UrlGenerateButton: FC<{
 
       {isOpen && (
         <Dialog open onClose={closeModal}>
-          <div style={{ padding: "3rem", wordWrap: "break-word" }}>
-            {`https://web-ai-gis.vercel.app/?selectedDataOption=${selectedDataOption.value}&x=${camera?.position.x}&y=${camera?.position.y}&z=${camera?.position.z}&selectedMapData=${selectedMapData}&colorMap=${colorMap}`}
-          </div>
+          <div style={{ padding: "3rem", wordWrap: "break-word" }}>{url}</div>
           <Button
             onClick={() => {
-              const text = `https://web-ai-gis.vercel.app/?selectedDataOption=${selectedDataOption.value}&x=${camera?.position.x}&y=${camera?.position.y}&z=${camera?.position.z}&selectedMapData=${selectedMapData}&colorMap=${colorMap}`;
               navigator.clipboard
-                .writeText(text)
+                .writeText(url)
                 .then(() => {
                   window.alert("Copied to clipboard!");
                   closeModal();

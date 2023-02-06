@@ -1,6 +1,7 @@
 import { Button, Dialog } from "@mui/material";
 import { FC, useCallback, useEffect, useState } from "react";
 import { Camera } from "three";
+import { useOpen } from "../hooks/useOpen";
 import { ColorMap } from "../types/loader";
 
 export const UrlGenerateButton: FC<{
@@ -9,11 +10,8 @@ export const UrlGenerateButton: FC<{
   selectedDataOption: { value: string; label: string };
   colorMap: ColorMap;
 }> = ({ camera, selectedMapData, selectedDataOption, colorMap }) => {
-  const [isOpen, setIsOpen] = useState(false);
   const [url, setUrl] = useState("");
-  const showModal = useCallback(() => {
-    setIsOpen(true);
-  }, []);
+  const { isOpen, onOpen, onClose } = useOpen();
 
   useEffect(() => {
     setUrl(
@@ -28,19 +26,12 @@ export const UrlGenerateButton: FC<{
     colorMap,
   ]);
 
-  const closeModal = useCallback(() => {
-    setIsOpen(false);
-  }, []);
-
   return (
     <>
       <Button
-        onClick={showModal}
+        onClick={onOpen}
         variant="outlined"
         style={{
-          position: "absolute",
-          right: 12,
-          bottom: 12,
           color: "white",
           borderColor: "white",
         }}
@@ -49,7 +40,7 @@ export const UrlGenerateButton: FC<{
       </Button>
 
       {isOpen && (
-        <Dialog open onClose={closeModal}>
+        <Dialog open onClose={onClose}>
           <div style={{ padding: "3rem", wordWrap: "break-word" }}>{url}</div>
           <Button
             onClick={() => {
@@ -57,7 +48,7 @@ export const UrlGenerateButton: FC<{
                 .writeText(url)
                 .then(() => {
                   window.alert("Copied to clipboard!");
-                  closeModal();
+                  onClose();
                 })
                 .catch(() => console.error("Failed to copy to clipboard"));
             }}

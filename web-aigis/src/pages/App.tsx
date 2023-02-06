@@ -1,13 +1,15 @@
-import "./App.css";
+import "../App.css";
 import { BufferGeometry, BufferGeometryLoader, Camera, Material } from "three";
-import loadJson from "./loadJson";
+import loadJson from "../loadJson";
 import { useEffect, useState } from "react";
-import { ColorMap } from "./types/loader";
+import { ColorMap } from "../types/loader";
 import Select from "react-select";
-import { AsteroidCanvas } from "./components/AsteroidCanvas";
-import { UrlGenerateButton } from "./components/UrlGenerateButton";
+import { AsteroidCanvas } from "../components/AsteroidCanvas";
+import { UrlGenerateButton } from "../components/UrlGenerateButton";
 import { useLocation } from "react-router-dom";
 import { Button } from "@mui/material";
+import { useRecoilValue } from "recoil";
+import { uploadedModelJsonState } from "../recoil/atoms";
 
 const ryuguDataOptions = [
   {
@@ -24,10 +26,14 @@ const ryuguDataOptions = [
   },
 ];
 
+function isEmpty(obj: Object) {
+  return !Object.keys(obj).length;
+}
+
 export function App() {
   const [geometry, setGeometry] = useState<BufferGeometry | null>(null);
   const [material, setMaterial] = useState<Material | null>(null);
-  const [asteroidName, setAsteroidName] = useState<string | null>(null);
+  const [asteroidName, setAsteroidName] = useState<string | null>("");
   const [mapdataKind, setMapdataKind] = useState<string | null>(null);
   const [unit, setUnit] = useState<string | null>(null);
 
@@ -52,13 +58,11 @@ export function App() {
 
   const loader = new BufferGeometryLoader();
 
+  const uploadedModelJson = useRecoilValue(uploadedModelJsonState);
+
   useEffect(() => {
-    // カラーマップまたは選択されているデータが変更されたら、ロードをし直す。
-    loader.load(
-      import.meta.env.PROD
-        ? `../${selectedDataOption.value}.json`
-        : `../public/${selectedDataOption.value}.json`,
-      (geometry) =>
+    if (import.meta.env.PROD) {
+      loader.load(`../${selectedDataOption.value}.json`, (geometry) =>
         loadJson(
           geometry,
           setGeometry,
@@ -68,8 +72,39 @@ export function App() {
           setUnit,
           colorMap
         )
-    );
-  }, [colorMap, selectedDataOption]);
+      );
+    } else {
+      if (!isEmpty(uploadedModelJson)) {
+        try {
+          const objectFromJson = JSON.parse(uploadedModelJson);
+          const bufferGeometry = loader.parse(objectFromJson);
+          loadJson(
+            bufferGeometry,
+            setGeometry,
+            setMaterial,
+            setAsteroidName,
+            setMapdataKind,
+            setUnit,
+            colorMap
+          );
+        } catch (e) {
+          console.log(e);
+        }
+      } else {
+        loader.load(`../public/${selectedDataOption.value}.json`, (geometry) =>
+          loadJson(
+            geometry,
+            setGeometry,
+            setMaterial,
+            setAsteroidName,
+            setMapdataKind,
+            setUnit,
+            colorMap
+          )
+        );
+      }
+    }
+  }, [colorMap, selectedDataOption, uploadedModelJson]);
 
   return (
     <div id="canvas-container">
@@ -96,18 +131,22 @@ export function App() {
       >
         change color
       </Button>
+
       <Select
         className="data-selector"
         options={ryuguDataOptions}
         value={selectedDataOption}
         onChange={(option) => option && setSelectedDataOption(option)}
       />
-      <UrlGenerateButton
-        camera={camera}
-        colorMap={colorMap}
-        selectedMapData={selectedMapData}
-        selectedDataOption={selectedDataOption}
-      />
+      <div style={{ position: "absolute", right: 12, bottom: 12 }}>
+        <UrlGenerateButton
+          camera={camera}
+          colorMap={colorMap}
+          selectedMapData={selectedMapData}
+          selectedDataOption={selectedDataOption}
+        />
+      </div>
+
       {selectedMapData && (
         <div
           style={{

@@ -18,13 +18,14 @@ function loadJson(
   setUnit: (unit: string) => void,
   colorMap: ColorMap = ColorMap.Rainbow
 ) {
-  setAsteroidName(geometry.userData.name ?? "");
-  setMapDataKind(geometry.userData.kind ?? "");
-  setUnit(geometry.userData.unit ?? "");
+  setAsteroidName(geometry.userData?.name ?? "");
+  setMapDataKind(geometry.userData?.kind ?? "");
+  setUnit(geometry.userData?.unit ?? "");
 
-  geometry.computeVertexNormals();
-  geometry.normalizeNormals();
-
+  if (geometry?.computeVertexNormals && geometry?.normalizeNormals) {
+    geometry?.computeVertexNormals();
+    geometry?.normalizeNormals();
+  }
   //map dataの最初の値をmaxとminに格納してforループでmax値とmin値を探す
   const geometryAttributesPressureArray = Array.from(
     geometry?.attributes.pressure.array

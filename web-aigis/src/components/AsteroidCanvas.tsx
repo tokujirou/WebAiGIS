@@ -1,7 +1,7 @@
 import { OrbitControls } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
-import { FC, useEffect, useRef } from "react";
-import { BufferGeometry, Camera, Material, Mesh, Vector3 } from "three";
+import { FC, useEffect } from "react";
+import { BufferGeometry, Camera, Material, Vector3 } from "three";
 import ryuguAcceleration from "../../public/ryuguAcceleration.json";
 import { useLocation } from "react-router-dom";
 

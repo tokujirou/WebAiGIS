@@ -1,39 +1,33 @@
 const fs = require("fs");
 const fsPromises = require("fs/promises");
 const { execSync } = require("child_process");
-const input = require("./input")();
 
-module.exports = async function createMapdata2Json() {
+module.exports = async function createMapdata2Json({
+  mapdata_file_path,
+  obj_file_path,
+  asteroid_name,
+}) {
   let vertex = [];
   let polygon = [];
   let count = 0;
 
-  console.log("Please input '.obj filename' \n(ex)xxx.obj =>　\n");
-  // const [inFileOBJ] = await input();
-  const inFileOBJ = "test.obj";
+  const objFilePath = obj_file_path;
+  const asteroidName = asteroid_name;
+  const mapdataFilePath = mapdata_file_path;
 
-  console.log("Please Input asterod name. \n(ex)asteroid => \n");
-  // const [asteroidName] = await input();
-  const asteroidName = "ryugu";
-
-  console.log(`And, input mapData '.txt filename' \n(ex)xxx.txt => `);
-  //const [mapDataFileName] = await input();
-  const mapDataFileName = "Acceleration.txt";
-
-  const mapData = await fsPromises.readFile(mapDataFileName, {
+  const mapData = await fsPromises.readFile(`${mapdataFilePath}`, {
     encoding: "utf-8",
   });
   const mapDataLines = mapData.split("\n");
-  const outFile = `${asteroidName}${mapDataLines[1]}.json`;
 
-  console.log("Please wait a moment...");
-
-  execSync("cat " + inFileOBJ + " | sed -e 's/  */ /g' > Asteroid.txt");
+  execSync("cat ./" + objFilePath + " | sed -e 's/  */ /g' > Asteroid.txt");
 
   const dataFile = "Asteroid.txt";
 
   let asteroidData = fs.readFileSync(dataFile, "utf-8").split("\n");
   execSync("rm Asteroid.txt");
+  execSync(`rm ${objFilePath}`);
+  execSync(`rm ${mapdataFilePath}`);
 
   for (let i in asteroidData) {
     if (asteroidData[i][0] == "v") {
@@ -45,58 +39,56 @@ module.exports = async function createMapdata2Json() {
     }
   }
 
-  fs.writeFile(
-    outFile,
-    `{\n\t"metadata": {\n\t\t"version": 4,\n\t\t"type": "BufferGeometry"\n\t},\n\t"userData": {\n\t\t"name": "${asteroidName}",\n\t\t"kind": "${mapDataLines[1]}",\n\t\t"unit": "${mapDataLines[2]}"\n\t\t},\n\t"data":{\n\t\t"attributes": {\n\t\t\t"position": {\n\t\t\t\t"itemSize": 3,\n\t\t\t\t"type": "Float32Array",\n\t\t\t\t"array": [`,
-    (err) => {
-      if (err) throw err;
-    }
-  );
+  const objTemplate = {
+    metadata: {
+      version: 4,
+      type: "BufferGeometry",
+    },
+    userData: {
+      name: asteroidName,
+      kind: mapDataLines[1],
+      unit: mapDataLines[2],
+    },
+    data: {
+      attributes: {
+        position: {
+          itemSize: 3,
+          type: "Float32Array",
+          array: [],
+        },
+        pressure: {
+          itemSize: 3,
+          type: "Float32Array",
+          array: [],
+        },
+      },
+    },
+  };
 
   for (let i = 0; i < count; i++) {
     for (let j = 1; j < 4; j++) {
-      await fsPromises.appendFile(
-        outFile,
-        i === count - 1 && j === 3
-          ? `${vertex[Number(polygon[i][j]) - 1][1]},${
-              vertex[Number(polygon[i][j]) - 1][2]
-            },${vertex[Number(polygon[i][j]) - 1][3]}`
-          : `${vertex[Number(polygon[i][j]) - 1][1]},${
-              vertex[Number(polygon[i][j]) - 1][2]
-            },${vertex[Number(polygon[i][j]) - 1][3]},`,
-        (err) => {
-          if (err) throw err;
-        }
+      objTemplate.data.attributes.position.array.push(
+        vertex[Number(polygon[i][j]) - 1][1]
+      );
+      objTemplate.data.attributes.position.array.push(
+        vertex[Number(polygon[i][j]) - 1][2]
+      );
+      objTemplate.data.attributes.position.array.push(
+        vertex[Number(polygon[i][j]) - 1][3]
       );
     }
   }
-  await fsPromises.appendFile(
-    outFile,
-    ']\n\t\t},\n\t\t"pressure": {\n\t\t\t"itemSize": 3,\n\t\t\t"type": "Float32Array",\n\t\t\t"array": [',
-    (err) => {
-      if (err) throw err;
-    }
-  );
-
   const mapdataCount = mapDataLines[3];
 
   for (let i = 4; i < mapdataCount; i++) {
     const [_, val] = mapDataLines[i].trim().split(/\s+/);
     if (val === "-") {
-      val = "0";
+      val = 0;
     }
-    if (i === Number(mapdataCount) - 1) {
-      await fsPromises.appendFile(outFile, `${val},${val},${val}`, (err) => {
-        throw err;
-      });
-    } else {
-      await fsPromises.appendFile(outFile, `${val},${val},${val},`, (err) => {
-        throw err;
-      });
+    for (let j = 0; j < 3; j++) {
+      objTemplate.data.attributes.pressure.array.push(val);
     }
   }
 
-  await fsPromises.appendFile(outFile, "]\n\t\t\t}\n\t\t}\n\t}\n}", (err) => {
-    if (err) throw err;
-  });
+  return JSON.stringify(objTemplate);
 };
